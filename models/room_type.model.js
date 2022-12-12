@@ -1,7 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const { connection } = require("./connectDatabase");
 
-const RoomTypeModel = connection.define(
+const { connection } = require("../config/connectDatabase");
+
+const Room_Type = connection.define(
   "Room_Type",
   {
     id: {
@@ -12,16 +13,10 @@ const RoomTypeModel = connection.define(
     },
     name: {
       type: DataTypes.STRING,
-      validate: {
-        isAlpha: true,
-      },
       allowNull: true,
     },
     price: {
       type: DataTypes.STRING,
-      validate: {
-        isNumeric: true,
-      },
       allowNull: true,
     },
   },
@@ -30,4 +25,4 @@ const RoomTypeModel = connection.define(
   }
 );
 
-module.exports = RoomTypeModel;
+module.exports = Room_Type;

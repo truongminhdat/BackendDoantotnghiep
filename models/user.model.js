@@ -5,9 +5,10 @@ const UserModel = connection.define(
   "User",
   {
     id: {
-      type: DataTypes.STRING,
-      primaryKey: true,
       allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER,
     },
     username: {
       type: DataTypes.STRING,

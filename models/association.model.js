@@ -1,12 +1,12 @@
-const { connection } = require("./connectDatabase");
-const UserModel = require("./user.model");
-const RoleModel = require("./role.model");
-const RoomModel = require("./room.model");
-const Room_TypeModel = require("./room_type.model");
-const RatingModel = require("./rating.model");
-const CommentModel = require("./comment.model");
-const BookingModel = require("./booking.model");
-const { Sequelize, DataTypes } = require("sequelize");
+const { connection } = require("../config/connectDatabase");
+const UserModel = require("./user");
+const RoleModel = require("./role");
+const RoomModel = require("./room");
+const Room_TypeModel = require("./room_type");
+const RatingModel = require("./rating");
+const CommentModel = require("./comment");
+const BookingModel = require("./booking");
+const { DataTypes } = require("sequelize");
 
 const setAssociation = () => {
   const option = {
@@ -28,13 +28,13 @@ const setAssociation = () => {
   UserModel.hasMany(RatingModel, {
     foreignKey: {
       name: "user_id",
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
   });
   RatingModel.belongsTo(UserModel, {
     foreignKey: {
       name: "user_id",
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
   });
   RoomModel.hasMany(RatingModel, {
@@ -52,13 +52,13 @@ const setAssociation = () => {
   UserModel.hasMany(CommentModel, {
     foreignKey: {
       name: "user_id",
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
   });
   CommentModel.belongsTo(UserModel, {
     foreignKey: {
       name: "user_id",
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
   });
   RoomModel.hasMany(CommentModel, {
@@ -76,13 +76,13 @@ const setAssociation = () => {
   UserModel.hasMany(BookingModel, {
     foreignKey: {
       name: "user_id",
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
   });
   BookingModel.belongsTo(UserModel, {
     foreignKey: {
       name: "user_id",
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
   });
   RoomModel.hasOne(BookingModel, {

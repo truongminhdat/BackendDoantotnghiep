@@ -10,21 +10,17 @@ const bookingModel = connection.define(
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    number: {
+    amount: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    qty: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     status: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    checkInDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    checkOutDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
+      type: DataTypes.BOOLEAN,
+      defaultValue: 0,
     },
   },
   {
