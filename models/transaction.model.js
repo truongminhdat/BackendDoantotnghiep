@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
-const { connection } = require("../config/connectDatabase");
+const { connection } = require("./connectDatabase");
 
 const TransactionModel = connection.define(
   "Transaction",

@@ -2,8 +2,8 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const { connection } = require("./connectDatabase");
 
-const roomTypeModel = connection.define(
-  "RoomType",
+const bookingModel = connection.define(
+  "Booking",
   {
     id: {
       allowNull: false,
@@ -11,9 +11,17 @@ const roomTypeModel = connection.define(
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    name: {
+    amount: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    qty: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 0,
     },
   },
   {
@@ -21,4 +29,4 @@ const roomTypeModel = connection.define(
   }
 );
 
-module.exports = roomTypeModel;
+module.exports = bookingModel;
