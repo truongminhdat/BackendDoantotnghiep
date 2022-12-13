@@ -26,6 +26,10 @@ const RoomModel = connection.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    price: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     convenient: {
       type: DataTypes.STRING,
       allowNull: true,

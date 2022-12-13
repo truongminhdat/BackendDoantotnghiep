@@ -4,11 +4,14 @@ const port = 8001;
 const bodyParser = require("body-parser");
 const setAssociation = require("./models/association");
 const authRouter = require("./Router/auth.router");
-// const sendMailRouter = require("./Router/sendMail.router");
-// //;
-// const userRouter = require("./Router/user.router");
-setAssociation();
+const roomTypeRouter = require("./Router/roomType.router");
+const { roleRouter } = require("./Router/role.router");
+const roomRouter = require("./Router/room.router");
 
+setAssociation();
+require("dotenv").config();
+
+// app.use(cors({ credentials: true, origin: true }));
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader("Access-Control-Allow-Origin", process.env.URL_REACT);
@@ -40,8 +43,11 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 // app.use("/email/service", sendMailRouter);
 app.use("/auth", authRouter);
+app.use("/roomType", roomTypeRouter);
+app.use("/role", roleRouter);
+app.use("/room", roomRouter);
 // app.use("/user/", userRouter);
 
 app.listen(port, () => {
-  console.log(`Error running server ${port}`);
+  console.log(`Save running server ${port}`);
 });

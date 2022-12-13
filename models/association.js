@@ -119,7 +119,7 @@ const setAssociation = () => {
     },
   });
 
-  connection.sync({ force: true });
+  connection.sync();
 };
 
 module.exports = setAssociation;
