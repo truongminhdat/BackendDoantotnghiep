@@ -17,6 +17,7 @@ const registrationController = async (req, res) => {
     gender,
     avatar,
     roleId,
+    dayOfBirth,
   } = req.body;
   const encrypted = md5(password);
   if (
@@ -48,7 +49,6 @@ const registrationController = async (req, res) => {
     }
     // create and save into database
     await UserModel.create({
-      id: uuid(),
       username: username,
       password: encrypted,
       firstName: firstName,
@@ -59,6 +59,7 @@ const registrationController = async (req, res) => {
       gender: gender,
       avatar: avatar,
       roleId: roleId,
+      dayOfBirth: dayOfBirth,
     });
     return res.status(201).json({ msg: "successfully registered!" });
   } catch (error) {
@@ -192,6 +193,58 @@ const getAllUser = async (req, res) => {
     });
   }
 };
+const createUser = async (req, res) => {
+  try {
+    const {
+      username,
+
+      firstName,
+      lastName,
+      email,
+      address,
+      phoneNumber,
+      gender,
+      avatar,
+      roleId,
+      dayOfBirth,
+    } = req.body;
+    if (
+      !username ||
+      !firstName ||
+      !lastName ||
+      !email ||
+      !address ||
+      !phoneNumber ||
+      !gender ||
+      !avatar ||
+      !roleId ||
+      !dayOfBirth
+    ) {
+      return res.status(400).json({
+        msg: "No enter value",
+      });
+    }
+    await UserModel.create({
+      username,
+      firstName,
+      lastName,
+      email,
+      gender,
+      phoneNumber,
+      avatar,
+      roleId,
+      dayOfBirth,
+      address,
+    });
+    return res.status(200).json({
+      msg: "Create User Success",
+    });
+  } catch (e) {
+    return res.status(500).json({
+      msg: "Error from the server",
+    });
+  }
+};
 
 module.exports = {
   registrationController,
@@ -199,4 +252,5 @@ module.exports = {
   resetPasswordController,
   updateProfileController,
   getAllUser,
+  createUser,
 };

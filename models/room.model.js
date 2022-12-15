@@ -6,9 +6,8 @@ const RoomModel = connection.define(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     name: {
       type: DataTypes.STRING,

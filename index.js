@@ -7,6 +7,7 @@ const authRouter = require("./Router/auth.router");
 const roomTypeRouter = require("./Router/roomType.router");
 const { roleRouter } = require("./Router/role.router");
 const roomRouter = require("./Router/room.router");
+const userRouter = require("./Router/user.router");
 
 setAssociation();
 require("dotenv").config();
@@ -46,6 +47,7 @@ app.use("/auth", authRouter);
 app.use("/roomType", roomTypeRouter);
 app.use("/role", roleRouter);
 app.use("/room", roomRouter);
+app.use("/user", userRouter);
 // app.use("/user/", userRouter);
 
 app.listen(port, () => {

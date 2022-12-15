@@ -29,5 +29,18 @@ const createRoomController = async (req, res) => {
     });
   }
 };
+const getAllRoomController = async (req, res) => {
+  try {
+    let getAllRoom = await RoomModel.findAll();
+    return res.status(200).json({
+      msg: "getAllRoom",
+      getAllRoom,
+    });
+  } catch (e) {
+    return res.status(500).json({
+      msg: "Error from the server",
+    });
+  }
+};
 
-module.exports = { createRoomController };
+module.exports = { createRoomController, getAllRoomController };

@@ -13,113 +13,113 @@ const setAssociation = () => {
   RoleModel.hasOne(UserModel, {
     foreignKey: {
       name: "roleId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   UserModel.belongsTo(RoleModel, {
     foreignKey: {
       name: "roleId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   RoomTypeModel.hasOne(RoomModel, {
     foreignKey: {
       name: "roomTypeId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   RoomModel.belongsTo(RoomTypeModel, {
     foreignKey: {
       name: "roomTypeId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   RoomModel.hasMany(RatingModel, {
     foreignKey: {
       name: "roomId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   RatingModel.belongsTo(RoomModel, {
     foreignKey: {
       name: "roomId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   UserModel.hasMany(RatingModel, {
     foreignKey: {
       name: "userId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   RatingModel.belongsTo(UserModel, {
     foreignKey: {
       name: "userId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   RoomModel.hasMany(CommentModel, {
     foreignKey: {
       name: "roomId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   CommentModel.belongsTo(RoomModel, {
     foreignKey: {
       name: "roomId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   UserModel.hasMany(CommentModel, {
     foreignKey: {
       name: "userId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   CommentModel.belongsTo(UserModel, {
     foreignKey: {
       name: "userId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   UserModel.hasMany(TransactionModel, {
     foreignKey: {
       name: "userId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   TransactionModel.belongsTo(UserModel, {
     foreignKey: {
       name: "userId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   RoomModel.hasMany(TransactionModel, {
     foreignKey: {
       name: "roomId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   TransactionModel.belongsTo(RoomModel, {
     foreignKey: {
       name: "roomId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   TransactionModel.hasMany(BookingModel, {
     foreignKey: {
       name: "transactionId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   BookingModel.belongsTo(TransactionModel, {
     foreignKey: {
       name: "transactionId",
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
 
-  connection.sync();
+  connection.sync({ force: true });
 };
 
 module.exports = setAssociation;

@@ -6,9 +6,9 @@ const bookingModel = connection.define(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
+
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     amount: {
       type: DataTypes.STRING,
