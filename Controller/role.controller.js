@@ -1,4 +1,5 @@
-const e = require("express");
+const express = require("express");
+const { v4: uuidv4 } = require("uuid");
 const RoleModel = require("../models/role.model");
 let postRoleController = async (req, res) => {
   try {
@@ -9,6 +10,7 @@ let postRoleController = async (req, res) => {
       });
     }
     await RoleModel.create({
+      id: uuidv4(),
       username,
     });
     return res.status(200).json({

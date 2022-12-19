@@ -7,31 +7,26 @@ const RoomModel = connection.define(
     id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.STRING,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: Sequelize.STRING,
     },
     title: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    status: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    image: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: true,
     },
     price: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    convenient: {
+    maxPeople: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    desc: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    roomNumber: {
+      type: DataTypes.INTEGER,
     },
   },
   {

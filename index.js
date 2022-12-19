@@ -4,9 +4,7 @@ const port = 8001;
 const bodyParser = require("body-parser");
 const setAssociation = require("./models/association");
 const authRouter = require("./Router/auth.router");
-const roomTypeRouter = require("./Router/roomType.router");
-const { roleRouter } = require("./Router/role.router");
-const roomRouter = require("./Router/room.router");
+const hotelRouter = require("./Router/hotel.router");
 const userRouter = require("./Router/user.router");
 
 setAssociation();
@@ -44,10 +42,10 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 // app.use("/email/service", sendMailRouter);
 app.use("/auth", authRouter);
-app.use("/roomType", roomTypeRouter);
-app.use("/role", roleRouter);
-app.use("/room", roomRouter);
+app.use("/hotel", hotelRouter);
+
 app.use("/user", userRouter);
+
 // app.use("/user/", userRouter);
 
 app.listen(port, () => {
