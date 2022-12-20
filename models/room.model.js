@@ -27,6 +27,7 @@ const RoomModel = connection.define(
     },
     roomNumber: {
       type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {

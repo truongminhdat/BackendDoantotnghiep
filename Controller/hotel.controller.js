@@ -1,7 +1,6 @@
 const express = require("express");
 const HotelModel = require("../models/hotel.model");
 const { v4: uuidv4 } = require("uuid");
-const e = require("express");
 
 let createHotelController = async (req, res) => {
   try {
@@ -95,9 +94,56 @@ let deleteHotelController = async (req, res) => {
     });
   }
 };
+let countByType = async (req, res) => {
+  try {
+    let hotelCount = await HotelModel.count({
+      where: {
+        type: "Resort",
+      },
+    });
+    let appermentCount = await HotelModel.count({
+      where: {
+        type: "appertment",
+      },
+    });
+    let villaCount = await HotelModel.count({
+      where: {
+        type: "villa",
+      },
+    });
+    let resortCount = await HotelModel.count({
+      where: {
+        type: "resort",
+      },
+    });
+    return res.status(200).json([
+      {
+        type: "hotel",
+        hotelCount,
+      },
+      {
+        type: "appertment",
+        appermentCount,
+      },
+      {
+        type: "villa",
+        villaCount,
+      },
+      {
+        type: "resort",
+        resortCount,
+      },
+    ]);
+  } catch (e) {
+    return res.status(500).json({
+      msg: "Error from the server",
+    });
+  }
+};
 module.exports = {
   createHotelController,
   updateHotelController,
   getAllHotelController,
   deleteHotelController,
+  countByType,
 };

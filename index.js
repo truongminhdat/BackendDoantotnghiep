@@ -6,6 +6,7 @@ const setAssociation = require("./models/association");
 const authRouter = require("./Router/auth.router");
 const hotelRouter = require("./Router/hotel.router");
 const userRouter = require("./Router/user.router");
+const roomRouter = require("./Router/room.router");
 
 setAssociation();
 require("dotenv").config();
@@ -45,6 +46,7 @@ app.use("/auth", authRouter);
 app.use("/hotel", hotelRouter);
 
 app.use("/user", userRouter);
+app.use("/room", roomRouter);
 
 // app.use("/user/", userRouter);
 
