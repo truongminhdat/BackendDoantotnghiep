@@ -7,7 +7,6 @@ const authRouter = require("./Router/auth.router");
 const hotelRouter = require("./Router/hotel.router");
 const userRouter = require("./Router/user.router");
 const roomRouter = require("./Router/room.router");
-const fileUpload = require("express-fileupload");
 
 setAssociation();
 require("dotenv").config();
@@ -42,17 +41,12 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-app.use(fileUpload());
-app.use(express.static("public"));
-
 // app.use("/email/service", sendMailRouter);
 app.use("/auth", authRouter);
 app.use("/hotel", hotelRouter);
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);
-
-// app.use("/user/", userRouter);
 
 app.listen(port, () => {
   console.log(`Save running server ${port}`);
