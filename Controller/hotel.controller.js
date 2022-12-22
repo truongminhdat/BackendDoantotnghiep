@@ -2,6 +2,7 @@ const express = require("express");
 const HotelModel = require("../models/hotel.model");
 const { v4: uuidv4 } = require("uuid");
 var path = require("path");
+var fs = require("fs");
 
 let createHotelController = async (req, res) => {
   let { name, type, city, address, distance, title, desc, cheaperPrice } =
@@ -67,25 +68,87 @@ let updateHotelController = async (req, res) => {
         id: id,
       },
     });
-
-    if (hotel) {
-      (hotel.name = name),
-        (hotel.type = type),
-        (hotel.city = city),
-        (hotel.address = address),
-        (hotel.distance = distance),
-        (hotel.title = title),
-        (hotel.desc = desc),
-        (hotel.cheaperPrice = cheaperPrice),
-        await hotel.save();
-      return res.status(200).json({
-        msg: "Update hotels success",
-      });
-    } else {
+    if (!hotel) {
       return res.status(404).json({
-        msg: "Update hotels ",
+        msg: "No Data Found!",
       });
     }
+    let fileName = "";
+    if (req.files === null) {
+      fileName = HotelModel.photos;
+    } else {
+      const file = req.files.file;
+      const fileSize = file.data.length;
+      const ext = path.extname(file.name);
+      const fileName = file.md5 + ext;
+      const allowedType = [".png", ".jpg", ".jpeg"];
+      if (!allowedType.includes(ext.toLowerCase())) {
+        return res.status(422).json({
+          msg: "Invalid Images",
+        });
+      }
+      if (fileSize > 5000000) {
+        return res.status(422).json({
+          msg: "Image must be lest than 5MB",
+        });
+      }
+      const filepath = `./public/images/${hotel.photos}`;
+      fs.unlinkSync(filepath);
+      file.mv(`./public/images/${fileName}`, async (err) => {
+        if (err)
+          return res.status(500).json({
+            msg: "Not image ",
+          });
+        const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+        try {
+          await HotelModel.update(
+            {
+              name,
+              type,
+              city,
+              address,
+              photos: fileName,
+              url: url,
+              distance,
+              title,
+              desc,
+              cheaperPrice,
+            },
+            {
+              where: {
+                id: id,
+              },
+            }
+          );
+          return res.status(200).json({
+            msg: "Update hotel success",
+          });
+        } catch (e) {
+          return res.status(404).json({
+            msg: "Update hotel failed",
+          });
+        }
+      });
+    }
+
+    // if (hotel) {
+    //   (hotel.name = name),
+    //     (hotel.type = type),
+    //     (hotel.city = city),
+    //     (hotel.address = address),
+    //     (hotel.distance = distance),
+    //     (hotel.title = title),
+    //     (hotel.desc = desc),
+    //     (hotel.cheaperPrice = cheaperPrice),
+    //     await hotel.save();
+    //   return res.status(200).json({
+    //     msg: "Update hotels success",
+    //   });
+    // } else {
+    //   return res.status(404).json({
+    //     msg: "Update hotels ",
+    //   });
+    // }
   } catch (e) {
     return res.status(500).json({
       msg: "Error from the server",
@@ -125,17 +188,23 @@ let deleteHotelController = async (req, res) => {
       id: hotelId,
     },
   });
-  console.log("check delete hotel", hotel);
-  if (hotel) {
-    await hotel.destroy();
+  if (!hotel) {
+    return res.status(404).json({
+      msg: "No data found",
+    });
+  }
+  try {
+    const filepath = `./public/images/${hotel.photos}`;
+    fs.unlinkSync(filepath);
+    await HotelModel.destroy({
+      where: {
+        id: hotelId,
+      },
+    });
     return res.status(200).json({
       msg: "Delete hotel success!",
     });
-  } else {
-    return res.status(404).json({
-      msg: "Delete hotel error!",
-    });
-  }
+  } catch (e) {}
 };
 let countByType = async (req, res) => {
   try {
