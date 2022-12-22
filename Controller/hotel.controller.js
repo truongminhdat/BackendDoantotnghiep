@@ -1,31 +1,61 @@
 const express = require("express");
 const HotelModel = require("../models/hotel.model");
 const { v4: uuidv4 } = require("uuid");
+var path = require("path");
 
 let createHotelController = async (req, res) => {
-  try {
-    let { name, type, city, address, distance, title, desc, cheaperPrice } =
-      req.body;
-    let createHotel = await HotelModel.create({
-      id: uuidv4(),
-      name,
-      type,
-      city,
-      address,
-      distance,
-      title,
-      desc,
-      cheaperPrice,
-    });
-    return res.status(200).json({
-      msg: "Create success full",
-      createHotel,
-    });
-  } catch (e) {
-    return res.status(500).json({
-      msg: "Error from server",
+  let { name, type, city, address, distance, title, desc, cheaperPrice } =
+    req.body;
+  if (req.files === null) {
+    return res.status(400).json({
+      msg: "No files upload",
     });
   }
+  const { file } = req.files;
+  const fileSize = file.data.length;
+  const ext = path.extname(file.name);
+  const fileName = file.md5 + ext;
+  const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+  const allowedType = [".png", ".jpg", ".jpeg"];
+  if (!allowedType.includes(ext.toLowerCase())) {
+    return res.status(422).json({
+      msg: "Invalid Images",
+    });
+  }
+  if (fileSize > 5000000) {
+    return res.status(422).json({
+      msg: "Image must be lest than 5MB",
+    });
+  }
+  file.mv(`./public/images/${fileName}`, async (err) => {
+    if (err)
+      return res.status(500).json({
+        msg: "Not image ",
+      });
+    try {
+      let createHotel = await HotelModel.create({
+        id: uuidv4(),
+        name,
+        type,
+        city,
+        address,
+        photos: fileName,
+        url: url,
+        distance,
+        title,
+        desc,
+        cheaperPrice,
+      });
+      return res.status(200).json({
+        msg: "Create success full",
+        createHotel,
+      });
+    } catch (error) {
+      return res.status(404).json({
+        msg: "Create success failed",
+      });
+    }
+  });
 };
 let updateHotelController = async (req, res) => {
   try {
@@ -75,6 +105,19 @@ let getAllHotelController = async (req, res) => {
     });
   }
 };
+let getLimitHotel = async (req, res) => {
+  const { featured } = req.query;
+  let limitNumber = parseInt(req.query.limit);
+  const hotels = await HotelModel.findAll({
+    where: {
+      featured: featured,
+    },
+    limit: limitNumber,
+  });
+  return res.status(200).json({
+    hotels,
+  });
+};
 let deleteHotelController = async (req, res) => {
   let { hotelId } = req.query;
   let hotel = await HotelModel.findOne({
@@ -119,19 +162,19 @@ let countByType = async (req, res) => {
     return res.status(200).json([
       {
         type: "hotel",
-        hotelCount,
+        count: hotelCount,
       },
       {
         type: "appertment",
-        appermentCount,
+        count: appermentCount,
       },
       {
         type: "villa",
-        villaCount,
+        count: villaCount,
       },
       {
         type: "resort",
-        resortCount,
+        count: resortCount,
       },
     ]);
   } catch (e) {
@@ -146,4 +189,5 @@ module.exports = {
   getAllHotelController,
   deleteHotelController,
   countByType,
+  getLimitHotel,
 };
