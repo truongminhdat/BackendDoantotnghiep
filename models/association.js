@@ -17,6 +17,7 @@ const setAssociation = () => {
       type: DataTypes.STRING,
     },
   });
+  // connection.sync({ force: true });
   connection.sync();
 };
 

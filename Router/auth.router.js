@@ -17,5 +17,5 @@ authRouter.post("/resetPassword", resetPasswordController);
 authRouter.put("/updateProfile", updateProfileController);
 authRouter.get("/getAllUser", getAllUser);
 authRouter.get("/getUserById", getAllUserById);
-authRouter.delete("/deleteUser", deleteUser);
+authRouter.delete("/deleteuser:id", deleteUser);
 module.exports = authRouter;

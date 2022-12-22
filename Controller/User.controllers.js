@@ -3,73 +3,72 @@ const { v4: uuidv4 } = require("uuid");
 const UserModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const sendMailController = require("./sendmail.Controllers");
-const { UUIDV4 } = require("sequelize");
+const { UUIDV4, UUID } = require("sequelize");
 const bcrypt = require("bcrypt");
+const RoomModel = require("../models/room.model");
 const saltRounds = 10;
 require("dotenv").config();
 
 const registrationController = async (req, res) => {
-  try {
-    const {
-      username,
-      password,
-      firstName,
-      lastName,
-      email,
-      address,
-      phoneNumber,
-      gender,
-      avatar,
-      roleId,
-      dayOfBirth,
-    } = req.body;
-    const hash = bcrypt.hashSync(password, saltRounds);
-    if (
-      !username ||
-      !firstName ||
-      !email ||
-      !password ||
-      !firstName ||
-      !lastName ||
-      !phoneNumber ||
-      !gender ||
-      !avatar
-    ) {
-      return res.status(400).json({
-        msg: "invalid input from user",
-      });
-    }
-    const existedUser = await UserModel.findOne({
-      where: {
-        email: email,
-      },
-    });
-    if (existedUser) {
-      return res.status(400).json({
-        msg: "Email already existed",
-      });
-    }
-    // create and save into database
-    await UserModel.create({
-      id: uuidv4(),
-      username: username,
-      password: hash,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      address: address,
-      phoneNumber: phoneNumber,
-      gender: gender,
-      avatar: avatar,
-      roleId: roleId,
-      dayOfBirth: dayOfBirth,
-    });
-    return res.status(201).json({ msg: "successfully registered!" });
-  } catch (e) {
-    return res.status(500).json({
-      msg: "Error from server",
+  // try {
+  const {
+    username,
+    password,
+    firstName,
+    lastName,
+    email,
+    address,
+    phoneNumber,
+    gender,
+    avatar,
+    dayOfBirth,
+  } = req.body;
+  const hash = bcrypt.hashSync(password, saltRounds);
+  if (
+    !username ||
+    !firstName ||
+    !email ||
+    !password ||
+    !firstName ||
+    !lastName ||
+    !phoneNumber ||
+    !gender ||
+    !avatar
+  ) {
+    return res.status(400).json({
+      msg: "invalid input from user",
     });
   }
+  const existedUser = await UserModel.findOne({
+    where: {
+      email: email,
+    },
+  });
+  if (existedUser) {
+    return res.status(400).json({
+      msg: "Email already existed",
+    });
+  }
+  // create and save into database
+  await UserModel.create({
+    id: uuidv4(),
+    username: username,
+    password: hash,
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    address: address,
+    phoneNumber: phoneNumber,
+    gender: gender,
+    avatar: avatar,
+    dayOfBirth: dayOfBirth,
+  });
+  return res.status(201).json({ msg: "successfully registered!" });
+  // } catch (e) {
+  //   return res.status(500).json({
+  //     msg: "Error from server",
+  //   });
+  // }
   // check if existed email or phone
 };
 
@@ -205,6 +204,7 @@ const updateProfileController = async (req, res) => {
     });
   }
 };
+
 const getAllUser = async (req, res) => {
   try {
     let getAllUser = await UserModel.findAll();
@@ -242,24 +242,59 @@ const getAllUserById = async (req, res) => {
     });
   }
 };
+
 const deleteUser = async (req, res) => {
   try {
-    let { userId } = req.query;
-    let user = await UserModel.findOne({
-      where: {
-        id: userId,
-      },
+    const userId = req.params.id;
+    await UserModel.destroy({ where: { id: userId } });
+    return res.status(200).json({
+      msg: "Delete user success",
     });
-    if (user) {
-      await user.destroy();
-      return res.status(200).json({
-        msg: "Delete user success",
-      });
-    }
+    // }
   } catch (e) {
     return res.status(500).json({
       msg: "Error from the server",
     });
+  }
+};
+
+const createUser = async (req, res) => {
+  const {
+    username,
+    firstname,
+    lastname,
+    email,
+    address,
+    phonenumber,
+    dayofbirth,
+    gender,
+    role,
+    image,
+  } = req.body;
+  try {
+    // if(username || firstname || lastname || email || address || phonenumber || dateofbirth || image === null){
+    //   return res.status(400).json({msg:"please insert value to input"})
+    // }else{
+
+    // }
+    const newUser = await UserModel.create({
+      id: uuidv4(),
+      username,
+      firstName: firstname,
+      lastName: lastname,
+      email,
+      address,
+      phoneNumber: phonenumber,
+      dayOfBirth: dayofbirth,
+      gender,
+      role,
+      image,
+    });
+    return res.status(200).json({
+      msg: "create user success",
+    });
+  } catch (error) {
+    res.status(400).json({ msg: "create user error", error });
   }
 };
 
@@ -269,7 +304,7 @@ module.exports = {
   resetPasswordController,
   updateProfileController,
   getAllUser,
-
   getAllUserById,
   deleteUser,
+  createUser,
 };
