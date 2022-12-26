@@ -319,7 +319,7 @@ const createUser = async (req, res) => {
 };
 const verifyToken = (req, res, next) => {
   try {
-    const authHeader = req.headers["authorization"];
+    const authHeader = req.header["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (token == null) return res.sendStatus(401);
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
@@ -375,6 +375,9 @@ const getUsers = async (req, res) => {
     console.log(error);
   }
 };
+const Authcontroller = (req, res) => {
+  return res.json(req.user);
+};
 
 module.exports = {
   registrationController,
@@ -388,4 +391,5 @@ module.exports = {
   verifyToken,
   refreshToken,
   getUsers,
+  Authcontroller,
 };

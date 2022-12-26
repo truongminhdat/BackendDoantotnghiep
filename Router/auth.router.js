@@ -12,7 +12,9 @@ const {
   refreshToken,
   getUsers,
   verifyToken,
+  Authcontroller,
 } = require("../Controller/User.controllers");
+const { validateToken } = require("../middlewares/AuthMidlewares");
 const authRouter = express.Router();
 
 authRouter.post("/signup", registrationController);
@@ -25,4 +27,5 @@ authRouter.delete("/deleteuser:id", deleteUser);
 authRouter.get("/token", refreshToken);
 authRouter.get("/getUser", getUsers);
 authRouter.post("/sendPassword", sendpasswordlink);
+authRouter.get("/auth", validateToken, Authcontroller);
 module.exports = authRouter;

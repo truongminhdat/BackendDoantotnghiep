@@ -9,6 +9,7 @@ const hotelRouter = require("./Router/hotel.router");
 const userRouter = require("./Router/user.router");
 const roomRouter = require("./Router/room.router");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
 
 setAssociation();
 require("dotenv").config();
@@ -44,7 +45,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.use(cookieParser());
-
+app.use(cors());
 app.use(fileUpload());
 app.use(express.static("public"));
 
