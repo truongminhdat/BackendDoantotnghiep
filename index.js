@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 8001;
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const setAssociation = require("./models/association");
 const authRouter = require("./Router/auth.router");
 const hotelRouter = require("./Router/hotel.router");
@@ -42,6 +43,8 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
+app.use(cookieParser());
+
 app.use(fileUpload());
 app.use(express.static("public"));
 
@@ -51,7 +54,10 @@ app.use("/hotel", hotelRouter);
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);
-
+app.get("/setcookie", (req, res) => {
+  res.cookie(`Cookie token name`, `encrypted cookie string Value`);
+  res.send("Cookie have been saved successfully");
+});
 // app.use("/user/", userRouter);
 
 app.listen(port, () => {

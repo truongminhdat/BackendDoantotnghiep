@@ -181,6 +181,24 @@ let getLimitHotel = async (req, res) => {
     hotels,
   });
 };
+let getDestinationHotel = async (req, res) => {
+  try {
+    let { city } = req.query;
+    let getHotel = await HotelModel.findAll({
+      where: {
+        city: city,
+      },
+    });
+    return res.status(200).json({
+      msg: "get all user",
+      getHotel,
+    });
+  } catch (e) {
+    return res.status(500).json({
+      msg: "Error from the server",
+    });
+  }
+};
 let deleteHotelController = async (req, res) => {
   let { hotelId } = req.query;
   let hotel = await HotelModel.findOne({
@@ -259,4 +277,5 @@ module.exports = {
   deleteHotelController,
   countByType,
   getLimitHotel,
+  getDestinationHotel,
 };

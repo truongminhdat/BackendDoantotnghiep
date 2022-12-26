@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const RoomModel = require("../models/room.model");
 const saltRounds = 10;
 require("dotenv").config();
+var path = require("path");
 
 const registrationController = async (req, res) => {
   // try {
@@ -22,6 +23,7 @@ const registrationController = async (req, res) => {
     gender,
     avatar,
     dayOfBirth,
+    role,
   } = req.body;
   const hash = bcrypt.hashSync(password, saltRounds);
   if (
@@ -62,6 +64,7 @@ const registrationController = async (req, res) => {
     gender: gender,
     avatar: avatar,
     dayOfBirth: dayOfBirth,
+    role,
   });
   return res.status(201).json({ msg: "successfully registered!" });
   // } catch (e) {
@@ -114,16 +117,16 @@ const loginController = async (req, res) => {
       }),
       process.env.JWT_SECRET
     );
-    return res
-      .cookie("access_token", accessToken, {
-        httpOnly: true,
-      })
-      .status(200)
-      .json({
-        msg: "login successfully!",
-        accessToken,
-        refreshToken,
-      });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    return res.status(200).json({
+      msg: "login successfully!",
+      accessToken,
+      refreshToken,
+    });
   }
   return res.status(400).json({ msg: "data is not valid!" });
 };
@@ -269,32 +272,107 @@ const createUser = async (req, res) => {
     dayofbirth,
     gender,
     role,
-    image,
   } = req.body;
+  const { file } = req.files;
+  const fileSize = file.data.length;
+  const ext = path.extname(file.name);
+  const fileName = file.md5 + ext;
+  const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+  const allowedType = [".png", ".jpg", ".jpeg"];
+  if (!allowedType.includes(ext.toLowerCase())) {
+    return res.status(422).json({
+      msg: "Invalid Images",
+    });
+  }
+  if (fileSize > 5000000) {
+    return res.status(422).json({
+      msg: "Image must be lest than 5MB",
+    });
+  }
+  file.mv(`./public/images/${fileName}`, async (err) => {
+    if (err)
+      return res.status(500).json({
+        msg: "Not image ",
+      });
+    try {
+      await UserModel.create({
+        id: uuidv4(),
+        username,
+        firstName: firstname,
+        lastName: lastname,
+        email,
+        address,
+        phoneNumber: phonenumber,
+        dayOfBirth: dayofbirth,
+        gender,
+        role,
+        avatar: fileName,
+        url: url,
+      });
+      return res.status(200).json({
+        msg: "create user success",
+      });
+    } catch (error) {
+      res.status(400).json({ msg: "create user error", error });
+    }
+  });
+};
+const verifyToken = (req, res, next) => {
   try {
-    // if(username || firstname || lastname || email || address || phonenumber || dateofbirth || image === null){
-    //   return res.status(400).json({msg:"please insert value to input"})
-    // }else{
-
-    // }
-    const newUser = await UserModel.create({
-      id: uuidv4(),
-      username,
-      firstName: firstname,
-      lastName: lastname,
-      email,
-      address,
-      phoneNumber: phonenumber,
-      dayOfBirth: dayofbirth,
-      gender,
-      role,
-      image,
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) return res.sendStatus(403);
+      req.email = decoded.email;
+      next();
     });
-    return res.status(200).json({
-      msg: "create user success",
+  } catch (e) {
+    return res.status(500).json({
+      msg: "Error from server",
     });
+  }
+};
+const refreshToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).json({
+      msg: "No token",
+    });
+  }
+  const checktoken = jwt.verify(refreshToken, process.env.JWT_SECRET);
+  const user = await UserModel.findAll({
+    where: {
+      id: checktoken.id,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      msg: "User refresh token is error",
+    });
+  }
+  const userId = user.id;
+  const userName = user.username;
+  const email = user.email;
+  const accessToken = jwt.sign(
+    { userId, userName, email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "15s",
+    }
+  );
+  return res.status(200).json({
+    accessToken,
+  });
+};
+const getUsers = async (req, res) => {
+  try {
+    const users = await UserModel.findAll({
+      attributes: ["id", "username", "email"],
+    });
+    res.json(users);
   } catch (error) {
-    res.status(400).json({ msg: "create user error", error });
+    console.log(error);
   }
 };
 
@@ -307,4 +385,7 @@ module.exports = {
   getAllUserById,
   deleteUser,
   createUser,
+  verifyToken,
+  refreshToken,
+  getUsers,
 };

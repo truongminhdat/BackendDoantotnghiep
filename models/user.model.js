@@ -47,6 +47,10 @@ const UserModel = connection.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     role: {
       type: DataTypes.STRING,
       allowNull: false,
