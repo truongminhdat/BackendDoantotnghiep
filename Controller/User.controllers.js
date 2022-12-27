@@ -176,21 +176,21 @@ const updateProfileController = async (req, res) => {
     });
     const {
       username,
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       email,
       address,
-      phoneNumber,
+      phonenumber,
       gender,
       avatar,
     } = req.body;
     if (user) {
       (user.username = username),
-        (user.firstName = firstName),
-        (user.lastName = lastName),
+        (user.firstName = firstname),
+        (user.lastName = lastname),
         (user.email = email),
         (user.address = address),
-        (user.phoneNumber = phoneNumber),
+        (user.phoneNumber = phonenumber),
         (user.gender = gender),
         (user.avatar = avatar),
         await user.save();
