@@ -3,9 +3,9 @@ const { v4: uuidv4 } = require("uuid");
 
 let createRoom = async (req, res) => {
   try {
-    let { title, price, maxPeople, desc, roomNumber, hotelId } = req.body;
-    if (!title || !price || !maxPeople || !desc || !roomNumber || !hotelId) {
-      return res.status(404).json({
+    let { title, price, maxPeople, desc, roomNumber } = req.body;
+    if (!title || !price || !maxPeople || !desc || !roomNumber) {
+      return res.status(403).json({
         msg: "You have not entered the value",
       });
     } else {

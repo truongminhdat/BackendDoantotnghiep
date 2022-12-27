@@ -8,7 +8,8 @@ const bcrypt = require("bcrypt");
 const RoomModel = require("../models/room.model");
 const saltRounds = 10;
 require("dotenv").config();
-var path = require("path");
+const path = require("path");
+const { FileUpload } = require("express-fileupload");
 
 const registrationController = async (req, res) => {
   // try {
@@ -272,6 +273,7 @@ const createUser = async (req, res) => {
     dayofbirth,
     gender,
     role,
+    avatar,
   } = req.body;
   const { file } = req.files;
   const fileSize = file.data.length;
@@ -295,25 +297,40 @@ const createUser = async (req, res) => {
         msg: "Not image ",
       });
     try {
-      await UserModel.create({
-        id: uuidv4(),
-        username,
-        firstName: firstname,
-        lastName: lastname,
-        email,
-        address,
-        phoneNumber: phonenumber,
-        dayOfBirth: dayofbirth,
-        gender,
-        role,
-        avatar: fileName,
-        url: url,
-      });
-      return res.status(200).json({
-        msg: "create user success",
-      });
+      if (
+        !username ||
+        !firstname ||
+        !lastname ||
+        !email ||
+        !address ||
+        !phonenumber ||
+        !dayofbirth ||
+        !gender ||
+        !role ||
+        !avatar
+      ) {
+        return res.status(200).json({ msg: "Please insert values" });
+      } else {
+        await UserModel.create({
+          id: uuidv4(),
+          username,
+          firstName: firstname,
+          lastName: lastname,
+          email,
+          address,
+          phoneNumber: phonenumber,
+          dayOfBirth: dayofbirth,
+          gender,
+          role,
+          avatar,
+          url: url,
+        });
+        return res.status(200).json({
+          msg: "create user success",
+        });
+      }
     } catch (error) {
-      res.status(400).json({ msg: "create user error", error });
+      res.status(500).json({ msg: "create user error", error });
     }
   });
 };
