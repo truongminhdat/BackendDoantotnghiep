@@ -22,8 +22,8 @@ const HotelModel = connection.define(
       allowNull: true,
     },
     address: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     distance: {
       type: DataTypes.STRING,

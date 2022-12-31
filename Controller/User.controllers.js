@@ -2,77 +2,75 @@ const md5 = require("md5");
 const { v4: uuidv4 } = require("uuid");
 const UserModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-const sendMailController = require("./sendmail.Controllers");
+
 const { UUIDV4, UUID } = require("sequelize");
 const bcrypt = require("bcrypt");
 const RoomModel = require("../models/room.model");
 const saltRounds = 10;
 require("dotenv").config();
 var path = require("path");
+const { sendEmail } = require("./email");
 
 const registrationController = async (req, res) => {
   // try {
   const {
     username,
-    password,
     firstName,
     lastName,
     email,
     address,
     phoneNumber,
+    selectedDate,
     gender,
-    avatar,
-    dayOfBirth,
-    role,
+    password,
   } = req.body;
   const hash = bcrypt.hashSync(password, saltRounds);
-  if (
-    !username ||
-    !firstName ||
-    !email ||
-    !password ||
-    !firstName ||
-    !lastName ||
-    !phoneNumber ||
-    !gender ||
-    !avatar
-  ) {
-    return res.status(400).json({
-      msg: "invalid input from user",
+  const { file } = req.files;
+  const fileSize = file.data.length;
+  const ext = path.extname(file.name);
+  const fileName = file.md5 + ext;
+  const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+  const allowedType = [".png", ".jpg", ".jpeg"];
+  if (!allowedType.includes(ext.toLowerCase())) {
+    return res.status(422).json({
+      msg: "Invalid Images",
     });
   }
-  const existedUser = await UserModel.findOne({
-    where: {
-      email: email,
-    },
-  });
-  if (existedUser) {
-    return res.status(400).json({
-      msg: "Email already existed",
+  if (fileSize > 5000000) {
+    return res.status(422).json({
+      msg: "Image must be lest than 5MB",
     });
   }
-  // create and save into database
-  await UserModel.create({
-    id: uuidv4(),
-    username: username,
-    password: hash,
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    address: address,
-    phoneNumber: phoneNumber,
-    gender: gender,
-    avatar: avatar,
-    dayOfBirth: dayOfBirth,
-    role,
+  file.mv(`./public/images/${fileName}`, async (err) => {
+    if (err)
+      return res.status(500).json({
+        msg: "Not image ",
+      });
+    try {
+      await UserModel.create({
+        id: uuidv4(),
+        username,
+        firstName,
+        lastName,
+        password: hash,
+        email,
+        address,
+        phoneNumber,
+        dayOfBirth: selectedDate,
+        gender,
+        role: "admin",
+        avatar: fileName,
+        url: url,
+      });
+      return res.status(200).json({
+        msg: "create user success",
+      });
+    } catch (e) {
+      return res.status(404).json({
+        msg: "User is not error",
+      });
+    }
   });
-  return res.status(201).json({ msg: "successfully registered!" });
-  // } catch (e) {
-  //   return res.status(500).json({
-  //     msg: "Error from server",
-  //   });
-  // }
-  // check if existed email or phone
 };
 
 const loginController = async (req, res) => {
@@ -137,7 +135,7 @@ const resetPasswordController = async (req, res) => {
       req.headers.accesstoken,
       process.env.JWT_SECRET
     );
-    const user = await UserModel.findOne({
+    const user = await UserModel.findByPk({
       where: {
         email: checkToken.email,
       },
@@ -272,7 +270,9 @@ const createUser = async (req, res) => {
     dayofbirth,
     gender,
     role,
+    password,
   } = req.body;
+  const hash = bcrypt.hashSync(password, saltRounds);
   const { file } = req.files;
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
@@ -378,6 +378,29 @@ const getUsers = async (req, res) => {
 const Authcontroller = (req, res) => {
   return res.json(req.user);
 };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({
+      msg: "Please provide a vilid email!",
+    });
+  }
+  const user = await UserModel.findOne({
+    email,
+  });
+  if (!user) {
+    return res.status(404).json({
+      msg: "User not found, invalid request",
+    });
+  } else {
+    await sendEmail({
+      email,
+    });
+    return res.status(200).json({
+      msg: "Send mail success",
+    });
+  }
+};
 
 module.exports = {
   registrationController,
@@ -392,4 +415,5 @@ module.exports = {
   refreshToken,
   getUsers,
   Authcontroller,
+  forgotPassword,
 };

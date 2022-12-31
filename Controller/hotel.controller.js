@@ -270,6 +270,14 @@ let countByType = async (req, res) => {
     });
   }
 };
+let searchHotel = (req, res) => {
+  try {
+  } catch (e) {
+    return res.status(500).json({
+      msg: "Error from the server",
+    });
+  }
+};
 module.exports = {
   createHotelController,
   updateHotelController,

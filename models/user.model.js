@@ -56,7 +56,7 @@ const UserModel = connection.define(
       allowNull: false,
     },
     dayOfBirth: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },

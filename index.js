@@ -55,6 +55,7 @@ app.use("/hotel", hotelRouter);
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);
+
 app.get("/setcookie", (req, res) => {
   res.cookie(`Cookie token name`, `encrypted cookie string Value`);
   res.send("Cookie have been saved successfully");
