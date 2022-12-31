@@ -3,7 +3,6 @@ const { v4: uuidv4 } = require("uuid");
 const UserModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const sendMailController = require("./sendmail.Controllers");
-const { UUIDV4, UUID } = require("sequelize");
 const bcrypt = require("bcrypt");
 const RoomModel = require("../models/room.model");
 const saltRounds = 10;
@@ -254,7 +253,6 @@ const deleteUser = async (req, res) => {
     return res.status(200).json({
       msg: "Delete user success",
     });
-    // }
   } catch (e) {
     return res.status(500).json({
       msg: "Error from the server",
