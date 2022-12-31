@@ -2,14 +2,13 @@ const md5 = require("md5");
 const { v4: uuidv4 } = require("uuid");
 const UserModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-
+const sendMailController = require("./sendmail.Controllers");
 const { UUIDV4, UUID } = require("sequelize");
 const bcrypt = require("bcrypt");
 const RoomModel = require("../models/room.model");
 const saltRounds = 10;
 require("dotenv").config();
 var path = require("path");
-const { sendEmail } = require("./email");
 
 const registrationController = async (req, res) => {
   // try {
@@ -173,21 +172,21 @@ const updateProfileController = async (req, res) => {
     });
     const {
       username,
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       email,
       address,
-      phoneNumber,
+      phonenumber,
       gender,
       avatar,
     } = req.body;
     if (user) {
       (user.username = username),
-        (user.firstName = firstName),
-        (user.lastName = lastName),
+        (user.firstName = firstname),
+        (user.lastName = lastname),
         (user.email = email),
         (user.address = address),
-        (user.phoneNumber = phoneNumber),
+        (user.phoneNumber = phonenumber),
         (user.gender = gender),
         (user.avatar = avatar),
         await user.save();
@@ -251,7 +250,6 @@ const deleteUser = async (req, res) => {
     return res.status(200).json({
       msg: "Delete user success",
     });
-    // }
   } catch (e) {
     return res.status(500).json({
       msg: "Error from the server",
@@ -270,7 +268,6 @@ const createUser = async (req, res) => {
     dayofbirth,
     gender,
     role,
-    password,
   } = req.body;
   const hash = bcrypt.hashSync(password, saltRounds);
   const { file } = req.files;
@@ -295,25 +292,40 @@ const createUser = async (req, res) => {
         msg: "Not image ",
       });
     try {
-      await UserModel.create({
-        id: uuidv4(),
-        username,
-        firstName: firstname,
-        lastName: lastname,
-        email,
-        address,
-        phoneNumber: phonenumber,
-        dayOfBirth: dayofbirth,
-        gender,
-        role,
-        avatar: fileName,
-        url: url,
-      });
-      return res.status(200).json({
-        msg: "create user success",
-      });
+      if (
+        !username ||
+        !firstname ||
+        !lastname ||
+        !email ||
+        !address ||
+        !phonenumber ||
+        !dayofbirth ||
+        !gender ||
+        !role ||
+        !avatar
+      ) {
+        return res.status(200).json({ msg: "Please insert values" });
+      } else {
+        await UserModel.create({
+          id: uuidv4(),
+          username,
+          firstName: firstname,
+          lastName: lastname,
+          email,
+          address,
+          phoneNumber: phonenumber,
+          dayOfBirth: dayofbirth,
+          gender,
+          role,
+          avatar,
+          url: url,
+        });
+        return res.status(200).json({
+          msg: "create user success",
+        });
+      }
     } catch (error) {
-      res.status(400).json({ msg: "create user error", error });
+      res.status(500).json({ msg: "create user error", error });
     }
   });
 };
