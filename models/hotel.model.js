@@ -45,25 +45,6 @@ const HotelModel = connection.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    rating: {
-      type: DataTypes.STRING,
-      validate: {
-        min: 0,
-        max: 5,
-      },
-    },
-    rooms: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    cheapestPrice: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    featured: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
   },
   {
     timestamps: true,

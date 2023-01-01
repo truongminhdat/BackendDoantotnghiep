@@ -33,29 +33,24 @@ let createHotelController = async (req, res) => {
       return res.status(500).json({
         msg: "Not image ",
       });
-    try {
-      let createHotel = await HotelModel.create({
-        id: uuidv4(),
-        name,
-        type,
-        city,
-        address,
-        photos: fileName,
-        url: url,
-        distance,
-        title,
-        desc,
-        cheaperPrice,
-      });
-      return res.status(200).json({
-        msg: "Create success full",
-        createHotel,
-      });
-    } catch (error) {
-      return res.status(404).json({
-        msg: "Create success failed",
-      });
-    }
+
+    let createHotel = await HotelModel.create({
+      id: uuidv4(),
+      name,
+      type,
+      city,
+      address,
+      photos: fileName,
+      url: url,
+      distance,
+      title,
+      desc,
+      cheaperPrice,
+    });
+    return res.status(200).json({
+      msg: "Create success full",
+      createHotel,
+    });
   });
 };
 let updateHotelController = async (req, res) => {
@@ -169,13 +164,10 @@ let getAllHotelController = async (req, res) => {
   }
 };
 let getLimitHotel = async (req, res) => {
-  const { featured } = req.query;
-  let limitNumber = parseInt(req.query.limit);
   const hotels = await HotelModel.findAll({
     where: {
-      featured: featured,
+      type: "resort",
     },
-    limit: limitNumber,
   });
   return res.status(200).json({
     hotels,
