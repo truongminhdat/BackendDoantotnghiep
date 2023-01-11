@@ -2,7 +2,7 @@ const md5 = require("md5");
 const { v4: uuidv4 } = require("uuid");
 const UserModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-const sendMailController = require("./sendmail.Controllers");
+
 const { UUIDV4, UUID } = require("sequelize");
 const bcrypt = require("bcrypt");
 const RoomModel = require("../models/room.model");

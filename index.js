@@ -5,9 +5,9 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const setAssociation = require("./models/association");
 const authRouter = require("./Router/auth.router");
-const hotelRouter = require("./Router/hotel.router");
+// const hotelRouter = require("./Router/hotel.router");
 const userRouter = require("./Router/user.router");
-const roomRouter = require("./Router/room.router");
+// const roomRouter = require("./Router/room.router");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 
@@ -51,10 +51,10 @@ app.use(express.static("public"));
 
 // app.use("/email/service", sendMailRouter);
 app.use("/auth", authRouter);
-app.use("/hotel", hotelRouter);
+// app.use("/hotel", hotelRouter);
 
 app.use("/user", userRouter);
-app.use("/room", roomRouter);
+// app.use("/room", roomRouter);
 
 app.get("/setcookie", (req, res) => {
   res.cookie(`Cookie token name`, `encrypted cookie string Value`);

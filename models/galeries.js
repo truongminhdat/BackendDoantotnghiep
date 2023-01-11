@@ -1,28 +1,21 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const { connection } = require("./connectDatabase");
 
-const RoomModel = connection.define(
-  "rooms",
+const GaleryModel = connection.define(
+  "galeries",
   {
     id: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.STRING,
     },
-    title: {
-      type: DataTypes.STRING,
-    },
-    price: {
-      type: DataTypes.STRING,
-    },
-    discount: {
-      type: DataTypes.STRING,
-    },
     thumbnail: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
-    description: {
+    url: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
@@ -30,4 +23,4 @@ const RoomModel = connection.define(
   }
 );
 
-module.exports = RoomModel;
+module.exports = GaleryModel;

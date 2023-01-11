@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const { connection } = require("./connectDatabase");
 
 const UserModel = connection.define(
-  "User",
+  "users",
   {
     id: {
       allowNull: false,
@@ -50,10 +50,6 @@ const UserModel = connection.define(
     url: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
-    role: {
-      type: DataTypes.STRING,
-      allowNull: false,
     },
     dayOfBirth: {
       type: DataTypes.DATE,

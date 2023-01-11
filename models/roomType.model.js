@@ -9,7 +9,7 @@ const HotelModel = connection.define(
       primaryKey: true,
       type: DataTypes.STRING,
     },
-    name: {
+    nameType: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -62,7 +62,7 @@ const HotelModel = connection.define(
     },
     featured: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: z,
     },
   },
   {
