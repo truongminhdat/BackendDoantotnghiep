@@ -12,17 +12,27 @@ const RoomModel = connection.define(
     title: {
       type: DataTypes.STRING,
     },
+    photos: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     price: {
       type: DataTypes.STRING,
     },
-    discount: {
+    maxPeople: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    desc: {
       type: DataTypes.STRING,
     },
-    thumbnail: {
-      type: DataTypes.STRING,
-    },
-    description: {
-      type: DataTypes.STRING,
+    roomNumber: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {

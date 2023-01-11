@@ -2,12 +2,7 @@ const { connection } = require("./connectDatabase");
 
 const { Sequelize, DataTypes } = require("sequelize");
 const RoomModel = require("../models/room.model");
-const GaleryModel = require("../models/galeries");
-const RoleModel = require("../models/role.model");
-const OrderModel = require("../models/order");
-const OrderDetail = require("../models/orderDetail");
-const CategoryModel = require("../models/categories");
-const UserModel = require("../models/user.model");
+const HotelModel = require("../models/hotel.model");
 
 const setAssociation = () => {
   RoleModel.hasMany(UserModel, {
@@ -70,6 +65,7 @@ const setAssociation = () => {
       type: DataTypes.STRING,
     },
   });
+  // connection.sync({ force: true });
   connection.sync();
   // connection.sync();
 };
