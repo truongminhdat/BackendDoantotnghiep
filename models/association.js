@@ -2,7 +2,12 @@ const { connection } = require("./connectDatabase");
 
 const { Sequelize, DataTypes } = require("sequelize");
 const RoomModel = require("../models/room.model");
-const HotelModel = require("../models/hotel.model");
+const UserModel = require("../models/user.model");
+const RoleModel = require("../models/role.model");
+const CategoryModel = require("../models/categories");
+const GaleryModel = require("../models/galeries");
+const OrderModel = require("../models/order");
+const OrderDetail = require("../models/orderDetail");
 
 const setAssociation = () => {
   RoleModel.hasMany(UserModel, {

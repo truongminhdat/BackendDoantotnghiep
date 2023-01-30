@@ -23,16 +23,12 @@ const RoomModel = connection.define(
     price: {
       type: DataTypes.STRING,
     },
-    maxPeople: {
-      type: DataTypes.INTEGER,
+    discount: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
     desc: {
       type: DataTypes.STRING,
-    },
-    roomNumber: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
     },
   },
   {

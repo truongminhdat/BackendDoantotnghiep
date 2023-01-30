@@ -9,6 +9,8 @@ const RoomModel = require("../models/room.model");
 const saltRounds = 10;
 require("dotenv").config();
 var path = require("path");
+const RoleModel = require("../models/role.model");
+const { Op } = require("sequelize");
 
 const registrationController = async (req, res) => {
   // try {
@@ -206,17 +208,74 @@ const updateProfileController = async (req, res) => {
 };
 
 const getAllUser = async (req, res) => {
-  try {
-    let getAllUser = await UserModel.findAll();
-    return res.status(200).json({
-      msg: "get all user",
-      getAllUser,
-    });
-  } catch (e) {
-    return res.status(500).json({
-      msg: "Error from the server",
-    });
-  }
+  const page = parseInt(req.query.page) || 0;
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = limit * page;
+  const search = req.query.search;
+  const totalRows = await UserModel.count({
+    where: {
+      [Op.or]: [
+        {
+          username: {
+            [Op.like]: "%" + search + "%",
+          },
+        },
+        {
+          email: {
+            [Op.like]: "%" + search + "%",
+          },
+        },
+      ],
+    },
+  });
+  const totalPage = Math.ceil(totalRows / limit);
+  let getAllUser = await UserModel.findAll({
+    where: {
+      [Op.or]: [
+        {
+          username: {
+            [Op.like]: "%" + search + "%",
+          },
+        },
+        {
+          email: {
+            [Op.like]: "%" + search + "%",
+          },
+        },
+        {
+          gender: {
+            [Op.like]: "%" + search + "%",
+          },
+        },
+      ],
+    },
+    include: [
+      {
+        model: RoleModel,
+        as: "role",
+        attributes: ["name"],
+      },
+    ],
+    raw: true,
+    nest: true,
+    offset: offset,
+    limit: limit,
+    order: [["id", "DESC"]],
+  });
+  console.log("check user hello word", getAllUser);
+  return res.status(200).json({
+    msg: "get all user",
+    getAllUser,
+    page,
+    limit,
+    totalRows,
+    totalPage,
+  });
+  // } catch (e) {
+  //   return res.status(500).json({
+  //     msg: "Error from the server",
+  //   });
+  // }
 };
 const getAllUserById = async (req, res) => {
   try {

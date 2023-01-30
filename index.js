@@ -10,6 +10,9 @@ const userRouter = require("./Router/user.router");
 // const roomRouter = require("./Router/room.router");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
+const { roleRouter } = require("./Router/role.router");
+const categoriesRouter = require("./Router/categories.router");
+const roomRouter = require("./Router/room.router");
 
 setAssociation();
 require("dotenv").config();
@@ -52,9 +55,12 @@ app.use(express.static("public"));
 // app.use("/email/service", sendMailRouter);
 app.use("/auth", authRouter);
 // app.use("/hotel", hotelRouter);
+app.use("/role", roleRouter);
 
 app.use("/user", userRouter);
-// app.use("/room", roomRouter);
+app.use("/categories", categoriesRouter);
+
+app.use("/room", roomRouter);
 
 app.get("/setcookie", (req, res) => {
   res.cookie(`Cookie token name`, `encrypted cookie string Value`);

@@ -9,7 +9,7 @@ const RoleModel = connection.define(
       primaryKey: true,
       type: DataTypes.STRING,
     },
-    username: {
+    name: {
       type: DataTypes.STRING,
     },
   },
