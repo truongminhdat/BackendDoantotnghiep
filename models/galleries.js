@@ -1,8 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const { connection } = require("./connectDatabase");
 
-const GaleryModel = connection.define(
-  "galeries",
+const GalleryModel = connection.define(
+  "galleries",
   {
     id: {
       allowNull: false,
@@ -23,4 +23,4 @@ const GaleryModel = connection.define(
   }
 );
 
-module.exports = GaleryModel;
+module.exports = GalleryModel;
