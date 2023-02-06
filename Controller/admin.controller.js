@@ -1,5 +1,5 @@
 const express = require("express");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const route = express.Router();
 const UserModel = require("../models/user.model");
 const roles = require("../models/role.model");
@@ -96,22 +96,25 @@ const adminLogin = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    const refreshToken = jwt.sign(JSON.stringify({
-      id:admin.id
-    }),
-    process.env.JWT_SECRET
-    )
+    const refreshToken = jwt.sign(
+      JSON.stringify({
+        id: admin.id,
+      }),
+      process.env.JWT_SECRET
+    );
 
-    res.cookie("refreshToken", refreshToken,{
-      httpOnly:true,
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-    })
-    return res.status(200).json({msg:"login successfully",accessToken, refreshToken})
+    });
+    return res
+      .status(200)
+      .json({ msg: "login successfully", accessToken, refreshToken });
   }
-  return res.status(400).json({msg:"Data is not valid"})
+  return res.status(400).json({ msg: "Data is not valid" });
 };
 
 module.exports = {
   registerController,
-  adminLogin
+  adminLogin,
 };
