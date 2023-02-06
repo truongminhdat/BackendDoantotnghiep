@@ -19,3 +19,4 @@ const RoleModel = connection.define(
 );
 
 module.exports = RoleModel;
+ 
