@@ -1,20 +1,25 @@
 const RoomModel = require("../../models/room.model");
+<<<<<<< HEAD
 const { v4: uuidv4 } = require("uuid");
 var path = require("path");
 const { Op, where } = require("sequelize");
 const CategoryModel = require("../../models/categories");
 const fs = require("fs");
+=======
+const path = require("path");
+const md5 = require("md5");
+>>>>>>> 667431f7050fc2abc3d655337cc655f9b4893fef
 
 const createRoom = async (req, res) => {
   // try {
   const { title, price, discount, desc, categoryId } = req.body;
-
   const { file } = req.files;
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
   const fileName = file.md5 + ext;
   const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
   const allowedType = [".png", ".jpg", ".jpeg"];
+
   if (!allowedType.includes(ext.toLowerCase())) {
     return res.status(422).json({
       msg: "Invalid Images",
@@ -51,6 +56,7 @@ const createRoom = async (req, res) => {
     }
   });
 };
+<<<<<<< HEAD
 const getAllRoom = async (req, res) => {
   const page = parseInt(req.query.page) || 0;
   const limit = parseInt(req.query.limit) || 10;
@@ -203,6 +209,8 @@ const deleteRoom = async (req, res) => {
     console.log(error.message);
   }
 };
+=======
+>>>>>>> 667431f7050fc2abc3d655337cc655f9b4893fef
 
 module.exports = {
   createRoom,

@@ -5,7 +5,7 @@ const RoomModel = require("../models/room.model");
 const UserModel = require("../models/user.model");
 const RoleModel = require("../models/role.model");
 const CategoryModel = require("../models/categories");
-const GaleryModel = require("../models/galeries");
+const GalleryModel = require("../models/galleries");
 const OrderModel = require("../models/order");
 const OrderDetail = require("../models/orderDetail");
 
@@ -34,13 +34,13 @@ const setAssociation = () => {
       type: DataTypes.STRING,
     },
   });
-  RoomModel.hasMany(GaleryModel, {
+  RoomModel.hasMany(GalleryModel, {
     foreignKey: {
       name: "roomId",
       type: DataTypes.STRING,
     },
   });
-  GaleryModel.belongsTo(RoomModel, {
+  GalleryModel.belongsTo(RoomModel, {
     foreignKey: {
       name: "roomId",
       type: DataTypes.STRING,
@@ -72,7 +72,6 @@ const setAssociation = () => {
   });
   // connection.sync({ force: true });
   connection.sync();
-  // connection.sync();
 };
 
 module.exports = setAssociation;

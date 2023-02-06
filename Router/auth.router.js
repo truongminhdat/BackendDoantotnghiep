@@ -3,6 +3,9 @@ const { changePassword } = require("../Controller/changePassword");
 const { sendpasswordlink } = require("../Controller/email");
 const { forgotPasswordController } = require("../Controller/forgotpassword");
 const { basicInfoController } = require("../Controller/profileController");
+const { adminLogin } = require("../Controller/admin.controller");
+const { isAdmin, isUser, isStaff } = require("../middlewares/Authen");
+const { roles } = require("../models/role.model");
 
 const {
   registrationController,
@@ -17,16 +20,17 @@ const {
   Authcontroller,
   forgotPassword,
 } = require("../Controller/User.controllers");
-const { validateToken } = require("../middlewares/AuthMidlewares");
+const { validateToken } = require("../middlewares/VerifytToken");
 const authRouter = express.Router();
 
 authRouter.post("/signup", registrationController);
-authRouter.post("/login", loginController);
-authRouter.post("/resetPassword", resetPasswordController);
+authRouter.post("/login", isUser, loginController);
+authRouter.post("/adminlogin", isAdmin, isStaff, adminLogin);
+authRouter.post("/resetPassword", isUser, resetPasswordController);
 authRouter.put("/updateProfile", updateProfileController);
 authRouter.get("/getAllUser", getAllUser);
 authRouter.get("/getUserById", getAllUserById);
-authRouter.delete("/deleteuser:id", deleteUser);
+authRouter.delete("/deleteuser:id", isAdmin, deleteUser);
 authRouter.get("/token", refreshToken);
 authRouter.get("/getUser", getUsers);
 authRouter.post("/sendPassword", forgotPasswordController);
