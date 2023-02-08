@@ -57,7 +57,7 @@ const registrationController = async (req, res) => {
         phoneNumber,
         dayOfBirth: selectedDate,
         gender,
-        roleId: "8c7f9543-78a4-4522-a74b-fa25daf230d8",
+        roleId,
         avatar: fileName,
         url: url,
       });
@@ -66,7 +66,7 @@ const registrationController = async (req, res) => {
       });
     } catch (e) {
       return res.status(404).json({
-        msg: "User is not error",
+        msg: "User is error",
       });
     }
   });
@@ -260,7 +260,7 @@ const getAllUser = async (req, res) => {
     limit: limit,
     order: [["id", "DESC"]],
   });
-  console.log("check user hello word", getAllUser);
+  // console.log("check user hello word", getAllUser);
   return res.status(200).json({
     msg: "get all user",
     getAllUser,
@@ -317,15 +317,17 @@ const deleteUser = async (req, res) => {
 const createUser = async (req, res) => {
   const {
     username,
-    firstname,
-    lastname,
+    password,
+    firstName,
+    lastName,
     email,
     address,
-    phonenumber,
-    dayofbirth,
+    phoneNumber,
+    birthDay,
     gender,
     role,
   } = req.body;
+
   const hash = bcrypt.hashSync(password, saltRounds);
   const { file } = req.files;
   const fileSize = file.data.length;
@@ -333,6 +335,7 @@ const createUser = async (req, res) => {
   const fileName = file.md5 + ext;
   const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
   const allowedType = [".png", ".jpg", ".jpeg"];
+
   if (!allowedType.includes(ext.toLowerCase())) {
     return res.status(422).json({
       msg: "Invalid Images",
@@ -348,35 +351,51 @@ const createUser = async (req, res) => {
       return res.status(500).json({
         msg: "Not image ",
       });
+
     try {
       if (
         !username ||
-        !firstname ||
-        !lastname ||
+        !password ||
+        !firstName ||
+        !lastName ||
         !email ||
         !address ||
-        !phonenumber ||
-        !dayofbirth ||
+        !phoneNumber ||
+        !birthDay ||
         !gender ||
         !role ||
         !avatar
       ) {
+        console.log(
+          username,
+          password,
+          firstName,
+          lastName,
+          email,
+          address,
+          phoneNumber,
+          birthDay,
+          gender,
+          role
+        );
         return res.status(200).json({ msg: "Please insert values" });
       } else {
         await UserModel.create({
           id: uuidv4(),
           username,
-          firstName: firstname,
-          lastName: lastname,
+          firstName,
+          lastName,
           email,
           address,
-          phoneNumber: phonenumber,
-          dayOfBirth: dayofbirth,
+          phoneNumber,
+          dayOfBirth: birthDay,
           gender,
           role,
           avatar,
           url: url,
         });
+
+        // console.log("check user", user);
         return res.status(200).json({
           msg: "create user success",
         });
@@ -386,6 +405,7 @@ const createUser = async (req, res) => {
     }
   });
 };
+
 const verifyToken = (req, res, next) => {
   try {
     const authHeader = req.header["authorization"];

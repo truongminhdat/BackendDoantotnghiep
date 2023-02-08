@@ -13,7 +13,6 @@ const cors = require("cors");
 const { roleRouter } = require("./Router/role.router");
 const categoriesRouter = require("./Router/categories.router");
 const roomRouter = require("./Router/room.router");
-
 setAssociation();
 require("dotenv").config();
 
@@ -61,7 +60,6 @@ app.use("/user", userRouter);
 app.use("/categories", categoriesRouter);
 
 app.use("/room", roomRouter);
-
 app.get("/setcookie", (req, res) => {
   res.cookie(`Cookie token name`, `encrypted cookie string Value`);
   res.send("Cookie have been saved successfully");

@@ -4,7 +4,7 @@ const { sendpasswordlink } = require("../Controller/email");
 const { forgotPasswordController } = require("../Controller/forgotpassword");
 const { basicInfoController } = require("../Controller/profileController");
 const { adminLogin } = require("../Controller/admin.controller");
-const { isAdmin, isUser, isStaff } = require("../middlewares/Authen");
+const { isAdmin, isUser, isStaff } = require("../middlewares/VerifyUser");
 const { roles } = require("../models/role.model");
 
 const {
@@ -20,13 +20,13 @@ const {
   Authcontroller,
   forgotPassword,
 } = require("../Controller/User.controllers");
-const { validateToken } = require("../middlewares/VerifytToken");
+const { validateToken } = require("../middlewares/Authen");
 const authRouter = express.Router();
 
 authRouter.post("/signup", registrationController);
-authRouter.post("/login", isUser, loginController);
-authRouter.post("/adminlogin", isAdmin, isStaff, adminLogin);
-authRouter.post("/resetPassword", isUser, resetPasswordController);
+authRouter.post("/login",  loginController);
+authRouter.post("/adminlogin", isAdmin,  adminLogin);
+authRouter.post("/resetPassword", resetPasswordController);
 authRouter.put("/updateProfile", updateProfileController);
 authRouter.get("/getAllUser", getAllUser);
 authRouter.get("/getUserById", getAllUserById);

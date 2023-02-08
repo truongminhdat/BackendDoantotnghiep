@@ -1,14 +1,9 @@
 const RoomModel = require("../../models/room.model");
-<<<<<<< HEAD
 const { v4: uuidv4 } = require("uuid");
 var path = require("path");
 const { Op, where } = require("sequelize");
 const CategoryModel = require("../../models/categories");
 const fs = require("fs");
-=======
-const path = require("path");
-const md5 = require("md5");
->>>>>>> 667431f7050fc2abc3d655337cc655f9b4893fef
 
 const createRoom = async (req, res) => {
   // try {
@@ -51,12 +46,11 @@ const createRoom = async (req, res) => {
       });
     } catch (e) {
       return res.status(404).json({
-        msg: "Room is not error",
+        msg: "Create room error",
       });
     }
   });
 };
-<<<<<<< HEAD
 const getAllRoom = async (req, res) => {
   const page = parseInt(req.query.page) || 0;
   const limit = parseInt(req.query.limit) || 10;
@@ -209,8 +203,6 @@ const deleteRoom = async (req, res) => {
     console.log(error.message);
   }
 };
-=======
->>>>>>> 667431f7050fc2abc3d655337cc655f9b4893fef
 
 module.exports = {
   createRoom,

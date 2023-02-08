@@ -1,42 +1,25 @@
-const {Sequelize} = require("sequelize")
-const rolesModel = require("../models/role.model");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const isAdmin = async (req, res, next) => {
-  const {name} = req.query
-  const roles = await rolesModel.findOne({where:{name:name}})
-  console.log(roles);
+const validateToken = (req, res, next) => {
+  const accessToken = req.header("accessToken");
+  if (!accessToken)
+    return res.status(404).json({
+      msg: "User not logged in",
+    });
+  try {
+    const validToken = jwt.verify(accessToken, process.env.JWT_SECRET);
+    req.user = validToken;
 
-  if (name === "admin") {
-    next();
-    return;
+    if (validToken) {
+      return next();
+    }
+  } catch (e) {
+    return res.status(404).json({
+      msg: "auth not token",
+    });
   }
-  return res.status(403).json({ msg: "Only allowed Admin" });
 };
-
-const isUser = async (req, res, next) => {
-  const {name} = req.query
-  const roles = await rolesModel.findOne({where:{name:name}})
-  console.log(roles);
-  if (name === "user") {
-    next();
-    return;
-  }
-  return res.status(403).json({ msg: "You're not Admin or Staff" });
-};
-
-const isStaff = async (req, res, next) => {
-  const {name} = req.query
-  const roles = await rolesModel.findOne({where:{name:name}})
-  console.log(roles);
-  if (name === "staff") {
-    next();
-    return;
-  }
-  return res.status(403).json({ msg: "You're staff" });
-};
-
 module.exports = {
-  isAdmin,
-  isUser,
-  isStaff
+  validateToken,
 };
